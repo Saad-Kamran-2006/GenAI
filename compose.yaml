@@ -1,0 +1,36 @@
+version: "1.0.0"
+name: "dailyDo-todo-app"
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: dailyDo-todo-docker
+    image: docker-todo:1.0.0
+    ports:
+      - "8000:8000"
+    networks:
+      - my-api-net
+    depends_on:
+      - postgres_db
+  postgres_db:
+    image: postgres:latest
+    restart: always
+    container_name: postgres-docker
+    environment:
+      - POSTGRES_USER=saadkamran
+      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB=mydatabase
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    networks:
+      - my-api-net
+
+volumes:
+  postgres_db:
+    driver: local
+
+networks:
+  my-api-net:
